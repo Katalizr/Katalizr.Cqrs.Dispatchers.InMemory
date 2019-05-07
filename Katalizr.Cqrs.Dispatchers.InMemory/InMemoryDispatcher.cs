@@ -24,7 +24,7 @@ namespace Katalizr.Cqrs.Dispatchers.InMemory
     }
     Task<TResponse> IAsynchronousDispatcher.Dispatch<TRequest, TResponse>(TRequest request)
     {
-      return HandlerResolver.GetAsynchronousHandler<TRequest, TResponse>(request, SingleInstanceFactory)?.Handle(request);
+      return Dispatch<TRequest, TResponse>(request, CancellationToken.None);
     }
     public Task<TResponse> Dispatch<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken) where TRequest : IRequest<TResponse>
     {
@@ -32,7 +32,7 @@ namespace Katalizr.Cqrs.Dispatchers.InMemory
     }
     Task IAsynchronousDispatcher.Dispatch<TRequest>(TRequest request)
     {
-      return HandlerResolver.GetAsynchronousHandler(request, SingleInstanceFactory)?.Handle(request);
+      return Dispatch(request, CancellationToken.None);
     }
     TResponse ISynchronousDispatcher.Dispatch<TRequest, TResponse>(TRequest request)
     {

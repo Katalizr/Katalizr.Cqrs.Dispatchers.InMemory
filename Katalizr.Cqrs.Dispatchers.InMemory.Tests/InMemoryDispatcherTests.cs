@@ -11,7 +11,9 @@ namespace Katalizr.Cqrs.Dispatchers.InMemory.Tests
   public class InMemoryDispatcherTests
   {
     #region Commands
+
     #region Synchronous
+
     [Fact]
     public void
       ShouldInvokeTheCommandHandlerWhenACommandWithoutExpectedResultIsDispatched()
@@ -105,9 +107,11 @@ namespace Katalizr.Cqrs.Dispatchers.InMemory.Tests
       containerHelper.MockedDecoratedSynchronousCommandWithExpectedResult
         .Verify(method => method.Handle(command), Times.Once);
     }
+
     #endregion
 
     #region Asynchronous
+
     [Fact]
     public async Task
       ShouldInvokeTheAsynchronousCommandHandlerWhenACommandWithoutExpectedResultIsDispatchedAsynchronously()
@@ -121,8 +125,9 @@ namespace Katalizr.Cqrs.Dispatchers.InMemory.Tests
       await dispatcher.Dispatch(command);
 
       // Asserts
-      containerHelper.MockedAsynchronousCommandWithoutExpectedResult.Verify(method => method.Handle(command), Times.Once);
+      containerHelper.MockedAsynchronousCommandWithoutExpectedResult.Verify(method => method.Handle(command, CancellationToken.None), Times.Once);
     }
+
     [Fact]
     public async Task
       ShouldInvokeTheDecoratedAsynchronousCommandHandlerWhenACommandWithoutExpectedResultIsDispatchedAsynchronously()
@@ -157,7 +162,7 @@ namespace Katalizr.Cqrs.Dispatchers.InMemory.Tests
       var containerHelper = new ContainerHelper();
       var expectedResult = "string";
       containerHelper.MockedAsynchronousCommandWithExpectedResult
-        .Setup(method => method.Handle(command))
+        .Setup(method => method.Handle(command, CancellationToken.None))
         .Returns(Task.FromResult(expectedResult));
       var dispatcher = containerHelper.Container.GetInstance<IAsynchronousDispatcher>();
 
@@ -168,7 +173,7 @@ namespace Katalizr.Cqrs.Dispatchers.InMemory.Tests
       // Asserts
       Check.That(result)
         .IsEqualTo(expectedResult);
-      containerHelper.MockedAsynchronousCommandWithExpectedResult.Verify(method => method.Handle(command), Times.Once);
+      containerHelper.MockedAsynchronousCommandWithExpectedResult.Verify(method => method.Handle(command, CancellationToken.None), Times.Once);
     }
 
     [Fact]
@@ -193,11 +198,15 @@ namespace Katalizr.Cqrs.Dispatchers.InMemory.Tests
       containerHelper.MockedDecoratedAsynchronousCommandWithExpectedResult
         .Verify(method => method.Handle(command, CancellationToken.None), Times.Once);
     }
+
     #endregion
+
     #endregion
 
     #region Queries
+
     #region Synchronous
+
     [Fact]
     public void
       ShouldInvokeTheQueryHandlerWhenAQueryWithExpectedResultIsDispatched()
@@ -219,6 +228,7 @@ namespace Katalizr.Cqrs.Dispatchers.InMemory.Tests
         .IsEqualTo(expectedResult);
       containerHelper.MockedSynchronousQueryWithExpectedResult.Verify(method => method.Handle(query), Times.Once);
     }
+
     [Fact]
     public void
       ShouldInvokeTheDecoratedQueryHandlerWhenAQueryWithExpectedResultIsDispatched()
@@ -240,9 +250,11 @@ namespace Katalizr.Cqrs.Dispatchers.InMemory.Tests
         .IsEqualTo(expectedResult);
       containerHelper.MockedDecoratedSynchronousQueryWithExpectedResult.Verify(method => method.Handle(query), Times.Once);
     }
+
     #endregion
 
     #region Asynchronous
+
     [Fact]
     public async Task
       ShouldInvokeTheAsynchronousQueryHandlerWhenAQueryWithExpectedResultIsDispatchedAsynchronously()
@@ -252,7 +264,7 @@ namespace Katalizr.Cqrs.Dispatchers.InMemory.Tests
       var containerHelper = new ContainerHelper();
       var expectedResult = "string";
       containerHelper.MockedAsynchronousQueryWithExpectedResult
-        .Setup(method => method.Handle(query))
+        .Setup(method => method.Handle(query, CancellationToken.None))
         .Returns(Task.FromResult(expectedResult));
       var dispatcher = containerHelper.Container.GetInstance<IAsynchronousDispatcher>();
 
@@ -262,7 +274,7 @@ namespace Katalizr.Cqrs.Dispatchers.InMemory.Tests
       // Asserts
       Check.That(result)
         .IsEqualTo(expectedResult);
-      containerHelper.MockedAsynchronousQueryWithExpectedResult.Verify(method => method.Handle(query), Times.Once);
+      containerHelper.MockedAsynchronousQueryWithExpectedResult.Verify(method => method.Handle(query, CancellationToken.None), Times.Once);
     }
 
     [Fact]
@@ -287,7 +299,9 @@ namespace Katalizr.Cqrs.Dispatchers.InMemory.Tests
       containerHelper.MockedDecoratedAsynchronousQueryWithExpectedResult
         .Verify(method => method.Handle(query, CancellationToken.None), Times.Once);
     }
+
     #endregion
+
     #endregion
   }
 }
